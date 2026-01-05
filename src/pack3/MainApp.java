@@ -6,8 +6,18 @@ import java.util.Scanner;
 public class MainApp {
     private static HospitalAdmin hospital = new HospitalAdmin();
     private static Scanner scanner = new Scanner(System.in);
+    
+    // ANSI Color Codes
+    private static final String RESET = "\033[0m";
+    private static final String RED = "\033[31m";
+    private static final String GREEN = "\033[32m";
+    private static final String YELLOW = "\033[33m";
+    private static final String BLUE = "\033[34m";
+    private static final String GOLD = "\033[38;5;214m"; // Gold color
+    private static final String BOLD = "\033[1m";
 
     public static void main(String[] args) {
+        printBanner();
         boolean systemRunning = true;
         Patient currentUser = null;
 
@@ -172,9 +182,74 @@ public class MainApp {
     }
 
     private static void printHeader(String title) {
-        System.out.println("\n##################################");
-        System.out.println("   " + title);
-        System.out.println("##################################");
+        System.out.println("\n" + GOLD + "##################################" + RESET);
+        System.out.println(GOLD + "   " + title + RESET);
+        System.out.println(GOLD + "##################################" + RESET);
+    }
+    
+    // Print banner at startup
+    public static void printBanner() {
+        clear();
+        String art = BLUE +
+                "   /$$$$$$  /$$    /$$       /$$   /$$  /$$$$$$   /$$$$$$  /$$$$$$$  /$$$$$$ /$$$$$$$$ /$$$$$$  /$$       \n" +
+                "  /$$__  $$|  $$  /$$/      | $$  | $$ /$$__  $$ /$$__  $$| $$__  $$|_  $$_/|__  $$__/ /$$__  $$| $$       \n" +
+                " | $$  \\__/ \\  $$/$$/       | $$  | $$| $$  \\ $$| $$  \\__/| $$  \\ $$  | $$     | $$   | $$  \\ $$| $$       \n" +
+                " | $$        \\  $$$/        | $$$$$$$$| $$  | $$|  $$$$$$ | $$$$$$$/  | $$     | $$   | $$$$$$$$| $$       \n" +
+                " | $$         \\  $/         | $$__  $$| $$  | $$ \\____  $$| $$____/   | $$     | $$   | $$__  $$| $$       \n" +
+                " | $$    $$    \\  /         | $$  | $$| $$  | $$ /$$  \\ $$| $$        | $$     | $$   | $$  | $$| $$       \n" +
+                " |  $$$$$$/     \\/          | $$  | $$|  $$$$$$/|  $$$$$$/| $$       /$$$$$$   | $$   | $$  | $$| $$$$$$$$\n" +
+                "  \\______/                  |__/  |__/ \\______/  \\______/ |__/      |______/   |__/   |__/  |__/|________/\n" +
+                RESET;
+
+        for (String line : art.split("\n")) {
+            System.out.println(line);
+            sleep(50);
+        }
+
+        String paddingHeader = "                                         ";
+        typeWrite(BOLD + GOLD + paddingHeader + "Welcome to Medicare Hospital" + RESET, 50);
+        String paddingSlogan = "                                 ";
+        String sloganStr = "A PLACE WHERE HEARTBEATS FIND STRENGTH!";
+        System.out.print(GREEN + paddingSlogan);
+        String[] words = sloganStr.split(" ");
+        for (int i = 0; i < words.length; i++) {
+            System.out.print(words[i] + (i < words.length - 1 ? " " : ""));
+            sleep(100);
+        }
+        System.out.println(RESET);
+        sleep(500);
+    }
+    
+    public static void typeWrite(String text, int speed) {
+        for (char c : text.toCharArray()) {
+            System.out.print(c);
+            sleep(speed);
+        }
+        System.out.println();
+    }
+    
+    public static void clear() {
+        try {
+            if (System.getProperty("os.name").contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+            }
+        } catch (Exception e) {
+            // If clear fails, just print newlines
+            for (int i = 0; i < 50; i++) {
+                System.out.println();
+            }
+        }
+    }
+    
+    public static void sleep(int milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
     
     // Helper method to wait for "0 to go back"
@@ -206,9 +281,9 @@ public class MainApp {
             System.out.print("Name: "); 
             u = scanner.nextLine();
             if(!hospital.isValidName(u)) {
-                System.out.println("Error: Name must contain only letters and spaces. No numbers or special characters allowed.");
+                System.out.println(RED + "Error: Name must contain only letters and spaces. No numbers or special characters allowed." + RESET);
             } else if(hospital.isUserExists(u)) {
-                System.out.println("Error: Username already exists. Try another.");
+                System.out.println(RED + "Error: Username already exists. Try another." + RESET);
             } else {
                 break; // Valid name, exit loop
             }
@@ -220,7 +295,7 @@ public class MainApp {
             System.out.print("Password (min 6): "); 
             p = scanner.nextLine();
             if(!hospital.isValidPassword(p)) {
-                System.out.println("Error: Password must be at least 6 characters.");
+                System.out.println(RED + "Error: Password must be at least 6 characters." + RESET);
             } else {
                 break; // Valid password, exit loop
             }
@@ -232,7 +307,7 @@ public class MainApp {
             System.out.print("Mobile (start 9/8/7/6): "); 
             m = scanner.nextLine();
             if(!hospital.isValidMobile(m)) {
-                System.out.println("Error: Invalid Mobile Format (Must start with 9,8,7,6 and be 10 digits).");
+                System.out.println(RED + "Error: Invalid Mobile Format (Must start with 9,8,7,6 and be 10 digits)." + RESET);
             } else {
                 break; // Valid mobile, exit loop
             }
@@ -248,10 +323,10 @@ public class MainApp {
                 if(a > 0 && a < 120) {
                     break; // Valid age
                 } else {
-                    System.out.println("Error: Please enter a realistic age.");
+                    System.out.println(RED + "Error: Please enter a realistic age." + RESET);
                 }
             } else { 
-                System.out.println("Error: Invalid Age (Numbers only)."); 
+                System.out.println(RED + "Error: Invalid Age (Numbers only)." + RESET); 
                 scanner.next(); // clear invalid input
             }
         }
@@ -262,7 +337,7 @@ public class MainApp {
             System.out.print("Blood Group (e.g., A+, O-): "); 
             bg = scanner.nextLine();
             if(!hospital.isValidBloodGroup(bg)) {
-                System.out.println("Error: Invalid Blood Group (Use A+, A-, B+, B-, O+, O-, AB+, AB-).");
+                System.out.println(RED + "Error: Invalid Blood Group (Use A+, A-, B+, B-, O+, O-, AB+, AB-)." + RESET);
             } else {
                 break; // Valid blood group
             }
@@ -271,7 +346,7 @@ public class MainApp {
         // All data is valid now, attempt registration
         String res = hospital.register(u, p, m, a, bg);
         if(res.equals("Success")) { 
-            System.out.println("Registration Successful!"); 
+            System.out.println(GREEN + "Registration Successful!" + RESET); 
             System.out.print("Press 0 to go back: ");
             while(true) {
                 if(scanner.hasNextInt()) {
@@ -304,10 +379,10 @@ public class MainApp {
             
             Patient pat = hospital.login(u, p, m);
             if(pat != null) { 
-                System.out.println("Welcome " + pat.getUsername()); 
+                System.out.println(GREEN + "Welcome " + pat.getUsername() + RESET); 
                 return pat; 
             } else { 
-                System.out.println("Error: Incorrect Name, Password, or Mobile."); 
+                System.out.println(RED + "Error: Incorrect Name, Password, or Mobile." + RESET); 
                 attempts--; 
             }
         }
@@ -362,9 +437,9 @@ public class MainApp {
                 
                 if(enteredOTP == otp) {
                     otpVerified = true;
-                    System.out.println("OTP Verified Successfully!");
+                    System.out.println(GREEN + "OTP Verified Successfully!" + RESET);
                 } else {
-                    System.out.println("Invalid OTP. Please try again.");
+                    System.out.println(RED + "Invalid OTP. Please try again." + RESET);
                     otpAttempts--;
                 }
             } else {
@@ -391,9 +466,9 @@ public class MainApp {
             // Update password
             String result = hospital.resetPassword(name, mobile, newPassword);
             if(result.contains("Success")) {
-                System.out.println("Password reset successful! You can now login with your new password.");
+                System.out.println(GREEN + "Password reset successful! You can now login with your new password." + RESET);
             } else {
-                System.out.println(result);
+                System.out.println(RED + result + RESET);
             }
         } else {
             System.out.println("\nOTP verification failed. Maximum attempts reached.");

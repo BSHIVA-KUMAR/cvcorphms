@@ -16,3 +16,4 @@ public class Appointment {
     public String getPatientName() { return patientName; }
 }
 
+
