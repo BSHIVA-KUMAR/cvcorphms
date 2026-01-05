@@ -23,7 +23,7 @@ public class MainApp {
 
         while (systemRunning) {
             if (currentUser == null) {
-                printHeader("MEDICARE HOSPITAL SYSTEM");
+                printHeader("CVCORP HOSPITAL Appointment SYSTEM");
                 System.out.println("1. Register Patient");
                 System.out.println("2. Login");
                 System.out.println("3. Emergency (Immediate Assistance)");
@@ -423,29 +423,69 @@ public class MainApp {
         System.out.println("\nOTP Generated: " + otp);
         System.out.println("(In production, OTP would be sent via SMS)");
         
-        // Step 3: Verify OTP with 3 attempts
-        int otpAttempts = 3;
+        // Step 3: Verify OTP with 3 attempts (with option to regenerate)
         boolean otpVerified = false;
+        boolean shouldContinue = true;
         
-        while(otpAttempts > 0 && !otpVerified) {
-            System.out.println("\nOTP Attempts remaining: " + otpAttempts);
-            System.out.print("Enter OTP (4 digits): ");
+        while(!otpVerified && shouldContinue) {
+            int otpAttempts = 3;
+            boolean currentOTPVerified = false;
             
-            if(scanner.hasNextInt()) {
-                int enteredOTP = scanner.nextInt();
-                scanner.nextLine(); // consume newline
+            while(otpAttempts > 0 && !currentOTPVerified) {
+                System.out.println("\nOTP Attempts remaining: " + otpAttempts);
+                System.out.print("Enter OTP (4 digits, or 0 to regenerate): ");
                 
-                if(enteredOTP == otp) {
-                    otpVerified = true;
-                    System.out.println(GREEN + "OTP Verified Successfully!" + RESET);
+                if(scanner.hasNextInt()) {
+                    int input = scanner.nextInt();
+                    scanner.nextLine(); // consume newline
+                    
+                    if(input == 0) {
+                        // User wants to regenerate OTP
+                        System.out.println(YELLOW + "Regenerating OTP..." + RESET);
+                        otp = hospital.generateOTP();
+                        System.out.println("New OTP Generated: " + otp);
+                        System.out.println("(In production, OTP would be sent via SMS)");
+                        break; // Break inner loop to start new OTP verification
+                    } else if(input == otp) {
+                        currentOTPVerified = true;
+                        otpVerified = true;
+                        System.out.println(GREEN + "OTP Verified Successfully!" + RESET);
+                    } else {
+                        System.out.println(RED + "Invalid OTP. Please try again." + RESET);
+                        otpAttempts--;
+                    }
                 } else {
-                    System.out.println(RED + "Invalid OTP. Please try again." + RESET);
+                    System.out.println(RED + "Invalid input. Please enter a 4-digit number." + RESET);
+                    scanner.nextLine(); // consume invalid input
                     otpAttempts--;
                 }
-            } else {
-                System.out.println("Invalid input. Please enter a 4-digit number.");
-                scanner.next(); // consume invalid input
-                otpAttempts--;
+            }
+            
+            // If OTP verification failed after 3 attempts
+            if(!otpVerified && otpAttempts == 0) {
+                System.out.println(RED + "\nOTP verification failed. Maximum attempts reached." + RESET);
+                System.out.print("Regenerate OTP? (1. Yes / 2. No - Return to Login): ");
+                
+                if(scanner.hasNextInt()) {
+                    int regenChoice = scanner.nextInt();
+                    scanner.nextLine(); // consume newline
+                    if(regenChoice == 1) {
+                        // Regenerate OTP
+                        System.out.println(YELLOW + "Regenerating OTP..." + RESET);
+                        otp = hospital.generateOTP();
+                        System.out.println("New OTP Generated: " + otp);
+                        System.out.println("(In production, OTP would be sent via SMS)");
+                        // Continue loop to verify new OTP
+                    } else {
+                        // User chose to return to login
+                        System.out.println("Returning to login menu...");
+                        shouldContinue = false;
+                    }
+                } else {
+                    scanner.nextLine(); // consume invalid input
+                    System.out.println("Invalid input. Returning to login menu...");
+                    shouldContinue = false;
+                }
             }
         }
         
@@ -459,7 +499,7 @@ public class MainApp {
                 if(hospital.isValidPassword(newPassword)) {
                     break;
                 } else {
-                    System.out.println("Error: Password must be at least 6 characters.");
+                    System.out.println(RED + "Error: Password must be at least 6 characters." + RESET);
                 }
             }
             
@@ -470,9 +510,6 @@ public class MainApp {
             } else {
                 System.out.println(RED + result + RESET);
             }
-        } else {
-            System.out.println("\nOTP verification failed. Maximum attempts reached.");
-            System.out.println("Password reset cancelled.");
         }
     }
 

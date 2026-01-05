@@ -1,26 +1,24 @@
 package pack1;
 
-public class Patient {
-    private String username;
+public class Patient extends Person {
     private String password;
-    private String mobile;
-    private int age;
     private String bloodGroup;
     private double medBill = 0;
     
     private String[] history = new String[50];
     private int historyCount = 0;
 
-    public Patient(String username, String password, String mobile, int age, String bloodGroup) {
-        this.username = username;
+    public Patient(String name, String password, String mobile, int age, String bloodGroup) {
+        super(name, mobile, age);  // Call Person constructor
         this.password = password;
-        this.mobile = mobile;
-        this.age = age;
         this.bloodGroup = bloodGroup;
     }
 
-    public String getUsername() { return username; }
-    public String getMobile() { return mobile; }
+    // getUsername() returns name from Person class (for backward compatibility)
+    public String getUsername() { return name; }
+    
+    // getMobile() is inherited from Person, but we can override if needed
+    // Already inherited, so no need to redefine
     
     public boolean checkPass(String p) { return this.password.equals(p); }
     public void setPassword(String newPassword) { this.password = newPassword; }
