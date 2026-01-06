@@ -104,13 +104,14 @@ double bill = p.getMedBill();          // Gets bill: 50.0
 
 ### Example from Project: Person → Patient Inheritance
 
-**Location:** `src/pack1/Person.java` (Parent) and `src/pack1/Patient.java` (Child)
+**Location:** `src/pack1/Person.java` (Parent - ABSTRACT CLASS) and `src/pack1/Patient.java` (Child)
 
 ```java
-// PARENT CLASS - Person
+// PARENT CLASS - Person (ABSTRACT CLASS)
 package pack1;
 
-public class Person {
+// ABSTRACT CLASS - Cannot be instantiated directly
+public abstract class Person {
     // Protected fields - accessible to child classes
     protected String name;
     protected String mobile;
@@ -127,6 +128,9 @@ public class Person {
     public String getName() { return name; }
     public String getMobile() { return mobile; }
     public int getAge() { return age; }
+    
+    // ABSTRACT METHOD - Must be implemented by child classes
+    public abstract String displayInfo();
 }
 
 // CHILD CLASS - Patient extends Person
@@ -146,7 +150,19 @@ public class Patient extends Person {  // ✅ INHERITANCE
     
     // getUsername() returns name from Person (inherited field)
     public String getUsername() { return name; }  // name is from Person class
-    // getMobile() is inherited from Person - no need to redefine!
+    
+    // METHOD OVERRIDING with @Override annotation
+    // Must implement abstract method from Person class
+    @Override
+    public String displayInfo() {
+        return "Patient: " + name + " | Mobile: " + mobile + " | Age: " + age + " | Blood Group: " + bloodGroup;
+    }
+    
+    // METHOD OVERRIDING - Override toString() from Object class
+    @Override
+    public String toString() {
+        return "Patient{name='" + name + "', mobile='" + mobile + "', age=" + age + ", bloodGroup='" + bloodGroup + "'}";
+    }
 }
 ```
 
@@ -171,7 +187,43 @@ p.addBill(50.00);                     // Patient-specific method
 - ✅ **`super()` keyword** - Calls parent constructor
 - ✅ **Inherited fields** - `name`, `mobile`, `age` from Person
 - ✅ **Inherited methods** - `getName()`, `getMobile()`, `getAge()` from Person
+- ✅ **Abstract class** - Person is abstract with abstract method `displayInfo()`
+- ✅ **Method overriding** - Patient implements abstract method and overrides `toString()`
+- ✅ **`@Override` annotation** - Used for method overriding
 - ✅ **Code reuse** - Common fields defined once in Person
+
+---
+
+### Abstract Class Implementation:
+
+**Abstract Class Features:**
+- `Person` is declared as `abstract class`
+- Contains abstract method: `public abstract String displayInfo();`
+- Cannot be instantiated directly (only through child classes)
+- Child class (`Patient`) must implement all abstract methods
+
+**Method Overriding with @Override Annotation:**
+
+```java
+// In Patient.java
+
+// Override abstract method from Person class
+@Override
+public String displayInfo() {
+    return "Patient: " + name + " | Mobile: " + mobile + " | Age: " + age + " | Blood Group: " + bloodGroup;
+}
+
+// Override toString() from Object class
+@Override
+public String toString() {
+    return "Patient{name='" + name + "', mobile='" + mobile + "', age=" + age + ", bloodGroup='" + bloodGroup + "'}";
+}
+```
+
+**Benefits of @Override Annotation:**
+- Compiler checks that method actually overrides a parent method
+- Prevents typos in method names
+- Makes code more readable and maintainable
 
 ---
 
@@ -245,12 +297,41 @@ admin.searchDoctorBySpecialty("Cardiology");           // 1 parameter
 ## <a name="abstraction"></a>5. ABSTRACTION ✅
 
 ### Definition:
-**Abstraction** hides complex implementation details and shows only simple, essential features to the user.
+**Abstraction** hides complex implementation details and shows only simple, essential features to the user. It can be achieved through Abstract Classes and Interfaces.
 
 ### Simple Explanation:
 - **Hide complexity** (internal arrays, loops, logic)
 - **Show simplicity** (easy-to-use methods)
+- **Abstract classes** define what must be implemented
 - **User doesn't need to know HOW it works**, just WHAT it does
+
+---
+
+### Abstract Class in Project:
+
+**Location:** `src/pack1/Person.java`
+
+```java
+// ABSTRACT CLASS - Defines structure, cannot be instantiated
+public abstract class Person {
+    protected String name;
+    protected String mobile;
+    protected int age;
+    
+    // Concrete methods (have implementation)
+    public String getName() { return name; }
+    public String getMobile() { return mobile; }
+    
+    // ABSTRACT METHOD - No implementation, must be overridden by child classes
+    public abstract String displayInfo();
+}
+```
+
+**How Abstract Class Works:**
+- `Person` is abstract - cannot create `new Person(...)`
+- Child class (`Patient`) must implement `displayInfo()` method
+- Forces consistent structure across all Person subclasses
+- Provides common fields and methods that all children inherit
 
 ---
 
@@ -336,7 +417,12 @@ hospital.register("John", "pass123", "9876543210", 35, "O+");
 | **Encapsulation** | ✅ **USED** | Private fields + Public methods | `Patient.java` |
 | **Inheritance** | ✅ **USED** | Person → Patient (extends) | `Person.java`, `Patient.java` |
 | **Polymorphism** | ✅ **USED** | Method Overloading | `HospitalAdmin.java` |
-| **Abstraction** | ✅ **USED** | Hidden implementation | `HospitalAdmin.java` |
+| **Abstraction** | ✅ **USED** | Abstract Class + Hidden implementation | `Person.java`, `HospitalAdmin.java` |
+
+**Additional Features:**
+- ✅ **Abstract Class** - Person is abstract with abstract method
+- ✅ **Method Overriding** - Patient overrides displayInfo() and toString() with @Override
+- ✅ **Method Overloading** - Multiple isValidPassword() and searchDoctorBySpecialty() versions
 
 ---
 
@@ -351,16 +437,27 @@ public boolean checkPass(String p)   // Controlled access
 
 #### ✅ **Inheritance**
 ```java
-// Person.java (Parent)
-public class Person {
+// Person.java (Abstract Parent)
+public abstract class Person {
     protected String name, mobile;
     protected int age;
+    public abstract String displayInfo();  // Abstract method
 }
 
 // Patient.java (Child)
 public class Patient extends Person {  // extends keyword
     public Patient(...) {
         super(name, mobile, age);  // super() calls parent
+    }
+    
+    @Override
+    public String displayInfo() {  // Implements abstract method
+        return "Patient: " + name + "...";
+    }
+    
+    @Override
+    public String toString() {  // Overrides Object class
+        return "Patient{...}";
     }
 }
 ```

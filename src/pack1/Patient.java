@@ -9,16 +9,24 @@ public class Patient extends Person {
     private int historyCount = 0;
 
     public Patient(String name, String password, String mobile, int age, String bloodGroup) {
-        super(name, mobile, age);  // Call Person constructor
+        super(name, mobile, age);  // calling person const
         this.password = password;
         this.bloodGroup = bloodGroup;
     }
 
-    // getUsername() returns name from Person class (for backward compatibility)
     public String getUsername() { return name; }
     
-    // getMobile() is inherited from Person, but we can override if needed
-    // Already inherited, so no need to redefine
+   
+    // Override abstract mtd from Person class
+    @Override
+    public String displayInfo() {
+        return "Patient: " + name + " | Mobile: " + mobile + " | Age: " + age + " | Blood Group: " + bloodGroup;
+    }
+    
+    @Override
+    public String toString() {
+        return "Patient{name='" + name + "', mobile='" + mobile + "', age=" + age + ", bloodGroup='" + bloodGroup + "'}";
+    }
     
     public boolean checkPass(String p) { return this.password.equals(p); }
     public void setPassword(String newPassword) { this.password = newPassword; }

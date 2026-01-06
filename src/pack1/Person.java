@@ -1,19 +1,17 @@
 package pack1;
 
-public class Person {
-    // Common fields for all persons
+public abstract class Person {
     protected String name;
     protected String mobile;
     protected int age;
     
-    // Constructor
     public Person(String name, String mobile, int age) {
         this.name = name;
         this.mobile = mobile;
         this.age = age;
     }
     
-    // Getter methods
+    // Getter mtds
     public String getName() {
         return name;
     }
@@ -26,7 +24,7 @@ public class Person {
         return age;
     }
     
-    // Setter methods (if needed)
+    // Setter methods 
     public void setName(String name) {
         this.name = name;
     }
@@ -38,5 +36,9 @@ public class Person {
     public void setAge(int age) {
         this.age = age;
     }
+    
+    // ABSTRACT mtd 
+    public abstract String displayInfo();
 }
+
 

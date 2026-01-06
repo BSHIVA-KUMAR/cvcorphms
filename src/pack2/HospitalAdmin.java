@@ -107,6 +107,22 @@ public class HospitalAdmin {
 
     public boolean isValidPassword(String pass) { return pass != null && pass.length() >= 6; }
     
+    // METHOD OVERLOADING - isValidPassword with different parameters
+    public boolean isValidPassword(String pass, int minLength) {
+        return pass != null && pass.length() >= minLength;
+    }
+    
+    // METHOD OVERLOADING - isValidPassword with custom validation
+    public boolean isValidPassword(String pass, boolean requireSpecialChar) {
+        if(pass == null || pass.length() < 6) return false;
+        if(!requireSpecialChar) return true;
+        // Check for special characters
+        for(char c : pass.toCharArray()) {
+            if(!Character.isLetterOrDigit(c)) return true;
+        }
+        return false;
+    }
+    
     public boolean isValidName(String name) {
         if (name == null || name.length() == 0) return false;
         // Check each character - only letters and spaces allowed
@@ -211,6 +227,36 @@ public class HospitalAdmin {
             }
         }
         if(!found) System.out.println("No doctors found.");
+    }
+    
+    // METHOD OVERLOADING - searchDoctorBySpecialty with case sensitivity option
+    public void searchDoctorBySpecialty(String spec, boolean caseSensitive) {
+        System.out.println("Results for " + spec + ":");
+        boolean found = false;
+        System.out.printf("%-5s %-20s %-20s%n", "ID", "Name", "Specialty");
+        for(int i = 0; i < doctorCount; i++) {
+            String doctorSpec = caseSensitive ? doctors[i].specialty : doctors[i].specialty.toLowerCase();
+            String searchSpec = caseSensitive ? spec : spec.toLowerCase();
+            if(doctorSpec.contains(searchSpec)) {
+                System.out.printf("%-5d %-20s %-20s%n", doctors[i].id, doctors[i].name, doctors[i].specialty);
+                found = true;
+            }
+        }
+        if(!found) System.out.println("No doctors found.");
+    }
+    
+    // METHOD OVERLOADING - searchDoctorBySpecialty that returns array of doctor IDs (different return type)
+    public int[] getDoctorIdsBySpecialty(String spec) {
+        int[] tempIds = new int[doctorCount];
+        int count = 0;
+        for(int i = 0; i < doctorCount; i++) {
+            if(doctors[i].specialty.toLowerCase().contains(spec.toLowerCase())) {
+                tempIds[count++] = doctors[i].id;
+            }
+        }
+        int[] result = new int[count];
+        System.arraycopy(tempIds, 0, result, 0, count);
+        return result;
     }
 
     public void handleEmergency(int code) {
@@ -358,7 +404,7 @@ public class HospitalAdmin {
              
              if (scanner.hasNextInt()) {
                  int payChoice = scanner.nextInt();
-                 scanner.nextLine(); // consume newline
+                 scanner.nextLine(); 
                  if (payChoice == 1) {
                      paymentGateway(p, totalAmount, scanner);
                  } else {
@@ -385,13 +431,13 @@ public class HospitalAdmin {
          System.out.print("Enter your choice (1-3): ");
          
          if (!scanner.hasNextInt()) {
-             scanner.nextLine(); // consume invalid input
+             scanner.nextLine(); 
              System.out.println("Invalid Payment Option!");
              return;
          }
          
          int choice = scanner.nextInt();
-         scanner.nextLine(); // consume newline
+         scanner.nextLine(); 
          boolean paymentSuccess = false;
          
          switch (choice) {

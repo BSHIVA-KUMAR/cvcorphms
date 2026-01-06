@@ -143,12 +143,12 @@ public class MainApp {
                             System.out.print("Enter Room Number to Book (or 0 to cancel): ");
                             if(scanner.hasNextInt()) {
                                 int rNum = scanner.nextInt();
-                                scanner.nextLine(); // consume newline
+                                scanner.nextLine(); 
                                 if(rNum != 0) {
                                     System.out.print("Number of Days: ");
                                     if(scanner.hasNextInt()) {
                                         int days = scanner.nextInt();
-                                        scanner.nextLine(); // consume newline
+                                        scanner.nextLine(); 
                                         System.out.println(hospital.bookRoom(currentUser, rNum, days));
                                         waitForBack();
                                     } else {
@@ -191,14 +191,14 @@ public class MainApp {
     public static void printBanner() {
         clear();
         String art = BLUE +
-                "   /$$$$$$  /$$    /$$       /$$   /$$  /$$$$$$   /$$$$$$  /$$$$$$$  /$$$$$$ /$$$$$$$$ /$$$$$$  /$$       \n" +
-                "  /$$__  $$|  $$  /$$/      | $$  | $$ /$$__  $$ /$$__  $$| $$__  $$|_  $$_/|__  $$__/ /$$__  $$| $$       \n" +
-                " | $$  \\__/ \\  $$/$$/       | $$  | $$| $$  \\ $$| $$  \\__/| $$  \\ $$  | $$     | $$   | $$  \\ $$| $$       \n" +
-                " | $$        \\  $$$/        | $$$$$$$$| $$  | $$|  $$$$$$ | $$$$$$$/  | $$     | $$   | $$$$$$$$| $$       \n" +
-                " | $$         \\  $/         | $$__  $$| $$  | $$ \\____  $$| $$____/   | $$     | $$   | $$__  $$| $$       \n" +
-                " | $$    $$    \\  /         | $$  | $$| $$  | $$ /$$  \\ $$| $$        | $$     | $$   | $$  | $$| $$       \n" +
-                " |  $$$$$$/     \\/          | $$  | $$|  $$$$$$/|  $$$$$$/| $$       /$$$$$$   | $$   | $$  | $$| $$$$$$$$\n" +
-                "  \\______/                  |__/  |__/ \\______/  \\______/ |__/      |______/   |__/   |__/  |__/|________/\n" +
+                "   /$$$$$$  /$$    /$$       /$$   /$$  /$$$$$$   /$$$$$$  /$$$$$$$  /$$$$$$ /$$$$$$$$  /$$$$$$  /$$        /$$$$$$ \n" +
+                "  /$$__  $$| $$   | $$      | $$  | $$ /$$__  $$ /$$__  $$| $$__  $$|_  $$_/|__  $$__/ /$$__  $$| $$       /$$__  $$\n" +
+                " | $$  \\__/| $$   | $$      | $$  | $$| $$  \\ $$| $$  \\__/| $$  \\ $$  | $$     | $$   | $$  \\ $$| $$      | $$  \\__/\n" +
+                " | $$      | $$  / $$/      | $$$$$$$$| $$  | $$|  $$$$$$ | $$$$$$$/  | $$     | $$   | $$$$$$$$| $$      |  $$$$$$ \n" +
+                " | $$       \\  $$ $$/       | $$__  $$| $$  | $$ \\____  $$| $$____/   | $$     | $$   | $$__  $$| $$       \\____  $$\n" +
+                " | $$    $$  \\  $$$/        | $$  | $$| $$  | $$ /$$  \\ $$| $$        | $$     | $$   | $$  | $$| $$       /$$  \\ $$\n" +
+                " |  $$$$$$/   \\  $/         | $$  | $$|  $$$$$$/|  $$$$$$/| $$       /$$$$$$   | $$   | $$  | $$| $$$$$$$$|  $$$$$$/\n" +
+                "  \\______/     \\_/          |__/  |__/ \\______/  \\______/ |__/      |______/   |__/   |__/  |__/|________/ \\______/ \n" +
                 RESET;
 
         for (String line : art.split("\n")) {
@@ -219,6 +219,37 @@ public class MainApp {
         System.out.println(RESET);
         sleep(500);
     }
+    // public static void printBanner() {
+    //     clear();
+    //     String art = BLUE +
+    //             "   /$$$$$$  /$$    /$$       /$$   /$$  /$$$$$$   /$$$$$$  /$$$$$$$  /$$$$$$ /$$$$$$$$ /$$$$$$  /$$       \n" +
+    //             "  /$$__  $$|  $$  /$$/      | $$  | $$ /$$__  $$ /$$__  $$| $$__  $$|_  $$_/|__  $$__/ /$$__  $$| $$       \n" +
+    //             " | $$  \\__/ \\  $$/$$/       | $$  | $$| $$  \\ $$| $$  \\__/| $$  \\ $$  | $$     | $$   | $$  \\ $$| $$       \n" +
+    //             " | $$        \\  $$$/        | $$$$$$$$| $$  | $$|  $$$$$$ | $$$$$$$/  | $$     | $$   | $$$$$$$$| $$       \n" +
+    //             " | $$         \\  $/         | $$__  $$| $$  | $$ \\____  $$| $$____/   | $$     | $$   | $$__  $$| $$       \n" +
+    //             " | $$    $$    \\  /         | $$  | $$| $$  | $$ /$$  \\ $$| $$        | $$     | $$   | $$  | $$| $$       \n" +
+    //             " |  $$$$$$/     \\/          | $$  | $$|  $$$$$$/|  $$$$$$/| $$       /$$$$$$   | $$   | $$  | $$| $$$$$$$$\n" +
+    //             "  \\______/                  |__/  |__/ \\______/  \\______/ |__/      |______/   |__/   |__/  |__/|________/\n" +
+    //             RESET;
+
+    //     for (String line : art.split("\n")) {
+    //         System.out.println(line);
+    //         sleep(50);
+    //     }
+
+    //     String paddingHeader = "                                         ";
+    //     typeWrite(BOLD + GOLD + paddingHeader + "Welcome to Medicare Hospital" + RESET, 50);
+    //     String paddingSlogan = "                                 ";
+    //     String sloganStr = "A PLACE WHERE HEARTBEATS FIND STRENGTH!";
+    //     System.out.print(GREEN + paddingSlogan);
+    //     String[] words = sloganStr.split(" ");
+    //     for (int i = 0; i < words.length; i++) {
+    //         System.out.print(words[i] + (i < words.length - 1 ? " " : ""));
+    //         sleep(100);
+    //     }
+    //     System.out.println(RESET);
+    //     sleep(500);
+    // }
     
     public static void typeWrite(String text, int speed) {
         for (char c : text.toCharArray()) {
@@ -271,7 +302,7 @@ public class MainApp {
         }
     }
 
-    // --- MODIFIED REGISTRATION METHOD ---
+    // ---  REGISTRATION Mtd ---
     private static void doRegister() {
         System.out.println("\n--- REGISTRATION ---");
         
@@ -319,15 +350,15 @@ public class MainApp {
             System.out.print("Age: "); 
             if(scanner.hasNextInt()) {
                 a = scanner.nextInt();
-                scanner.nextLine(); // consume the leftover newline
+                scanner.nextLine(); 
                 if(a > 0 && a < 120) {
-                    break; // Valid age
+                    break; 
                 } else {
                     System.out.println(RED + "Error: Please enter a realistic age." + RESET);
                 }
             } else { 
                 System.out.println(RED + "Error: Invalid Age (Numbers only)." + RESET); 
-                scanner.next(); // clear invalid input
+                scanner.next(); 
             }
         }
 
@@ -343,7 +374,6 @@ public class MainApp {
             }
         }
 
-        // All data is valid now, attempt registration
         String res = hospital.register(u, p, m, a, bg);
         if(res.equals("Success")) { 
             System.out.println(GREEN + "Registration Successful!" + RESET); 
@@ -445,7 +475,7 @@ public class MainApp {
                         otp = hospital.generateOTP();
                         System.out.println("New OTP Generated: " + otp);
                         System.out.println("(In production, OTP would be sent via SMS)");
-                        break; // Break inner loop to start new OTP verification
+                        break; // reset attempts
                     } else if(input == otp) {
                         currentOTPVerified = true;
                         otpVerified = true;
@@ -456,7 +486,7 @@ public class MainApp {
                     }
                 } else {
                     System.out.println(RED + "Invalid input. Please enter a 4-digit number." + RESET);
-                    scanner.nextLine(); // consume invalid input
+                    scanner.nextLine(); 
                     otpAttempts--;
                 }
             }

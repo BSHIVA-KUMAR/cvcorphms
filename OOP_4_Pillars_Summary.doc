@@ -48,13 +48,15 @@ double bill = p.getMedBill();  // ✅ Can read through public method
 
 HOW IT'S IMPLEMENTED:
 Inheritance is implemented using the 'extends' keyword. Patient class extends 
-Person class, inheriting name, mobile, and age fields with getter methods.
+abstract Person class, inheriting name, mobile, and age fields. Patient implements 
+abstract method displayInfo() and overrides toString() using @Override annotation.
 
 CODE EXAMPLE FROM PROJECT:
 
-File: src/pack1/Person.java (Parent Class)
+File: src/pack1/Person.java (Parent Class - ABSTRACT CLASS)
 
-public class Person {
+// ABSTRACT CLASS - Cannot be instantiated directly
+public abstract class Person {
     protected String name;
     protected String mobile;
     protected int age;
@@ -68,6 +70,9 @@ public class Person {
     public String getName() { return name; }
     public String getMobile() { return mobile; }
     public int getAge() { return age; }
+    
+    // ABSTRACT METHOD - Must be implemented by child classes
+    public abstract String displayInfo();
 }
 
 File: src/pack1/Patient.java (Child Class)
@@ -83,13 +88,28 @@ public class Patient extends Person {
     }
     
     public String getUsername() { return name; }  // Uses inherited 'name' field
+    
+    // METHOD OVERRIDING with @Override annotation
+    // Override abstract method from Person class
+    @Override
+    public String displayInfo() {
+        return "Patient: " + name + " | Mobile: " + mobile + " | Age: " + age + " | Blood Group: " + bloodGroup;
+    }
+    
+    // METHOD OVERRIDING - Override toString() from Object class
+    @Override
+    public String toString() {
+        return "Patient{name='" + name + "', mobile='" + mobile + "', age=" + age + ", bloodGroup='" + bloodGroup + "'}";
+    }
 }
 
 USAGE:
 Patient p = new Patient("John", "pass123", "9876543210", 35, "O+");
-System.out.println(p.getName());   // ✅ Inherited from Person
-System.out.println(p.getMobile()); // ✅ Inherited from Person
-System.out.println(p.getAge());    // ✅ Inherited from Person
+System.out.println(p.getName());      // ✅ Inherited from Person
+System.out.println(p.getMobile());    // ✅ Inherited from Person
+System.out.println(p.getAge());       // ✅ Inherited from Person
+System.out.println(p.displayInfo());  // ✅ Overridden method from Person (abstract)
+System.out.println(p.toString());     // ✅ Overridden method from Object class
 
 ================================================================================
 3. POLYMORPHISM ✅
@@ -105,19 +125,29 @@ File: src/pack2/HospitalAdmin.java
 
 public class HospitalAdmin {
     
-    // Method Overloading - Same method name, different parameters
+    // METHOD OVERLOADING - Same method name, different parameters
     
-    // Version 1: Validate mobile as String
-    public boolean isValidMobile(String mobile) {
-        if (mobile == null || mobile.length() != 10) return false;
-        for (int i = 0; i < mobile.length(); i++) {
-            if (mobile.charAt(i) < '0' || mobile.charAt(i) > '9') return false; 
-        }
-        char f = mobile.charAt(0);
-        return (f == '9' || f == '8' || f == '7' || f == '6');
+    // Overload 1: Validate password with default minimum length (6)
+    public boolean isValidPassword(String pass) { 
+        return pass != null && pass.length() >= 6; 
     }
     
-    // Search by specialty
+    // Overload 2: Validate password with custom minimum length
+    public boolean isValidPassword(String pass, int minLength) {
+        return pass != null && pass.length() >= minLength;
+    }
+    
+    // Overload 3: Validate password with special character requirement
+    public boolean isValidPassword(String pass, boolean requireSpecialChar) {
+        if(pass == null || pass.length() < 6) return false;
+        if(!requireSpecialChar) return true;
+        for(char c : pass.toCharArray()) {
+            if(!Character.isLetterOrDigit(c)) return true;
+        }
+        return false;
+    }
+    
+    // Overload 1: Search by specialty (case-insensitive by default)
     public void searchDoctorBySpecialty(String spec) {
         System.out.println("Results for " + spec + ":");
         boolean found = false;
@@ -131,20 +161,46 @@ public class HospitalAdmin {
         }
         if(!found) System.out.println("No doctors found.");
     }
+    
+    // Overload 2: Search by specialty with case sensitivity option
+    public void searchDoctorBySpecialty(String spec, boolean caseSensitive) {
+        System.out.println("Results for " + spec + ":");
+        boolean found = false;
+        System.out.printf("%-5s %-20s %-20s%n", "ID", "Name", "Specialty");
+        for(int i = 0; i < doctorCount; i++) {
+            String doctorSpec = caseSensitive ? doctors[i].specialty : doctors[i].specialty.toLowerCase();
+            String searchSpec = caseSensitive ? spec : spec.toLowerCase();
+            if(doctorSpec.contains(searchSpec)) {
+                System.out.printf("%-5d %-20s %-20s%n", 
+                    doctors[i].id, doctors[i].name, doctors[i].specialty);
+                found = true;
+            }
+        }
+        if(!found) System.out.println("No doctors found.");
+    }
 }
 
 USAGE:
 HospitalAdmin admin = new HospitalAdmin();
-boolean valid = admin.isValidMobile("9876543210");        // String parameter
-admin.searchDoctorBySpecialty("Cardiology");              // One parameter
+
+// Method Overloading Examples:
+// Password validation - 3 different ways
+boolean valid1 = admin.isValidPassword("pass123");              // Default (min 6 chars)
+boolean valid2 = admin.isValidPassword("pass123", 8);          // Custom length (min 8 chars)
+boolean valid3 = admin.isValidPassword("pass123!", true);      // With special char requirement
+
+// Doctor search - 2 different ways
+admin.searchDoctorBySpecialty("Cardiology");                   // Case-insensitive (default)
+admin.searchDoctorBySpecialty("Cardiology", true);            // Case-sensitive search
 
 ================================================================================
 4. ABSTRACTION ✅
 ================================================================================
 
 HOW IT'S IMPLEMENTED:
-Abstraction is implemented by hiding complex internal implementation (arrays, 
-loops, validation) behind simple public methods, providing easy-to-use interfaces.
+Abstraction is implemented through Abstract Class (Person) and by hiding complex 
+internal implementation (arrays, loops, validation) behind simple public methods, 
+providing easy-to-use interfaces.
 
 CODE EXAMPLE FROM PROJECT:
 
@@ -206,10 +262,16 @@ SUMMARY TABLE
 | Pillar         | Status | Implementation                      | Location           |
 |----------------|--------|-------------------------------------|-------------------|
 | Encapsulation  | ✅     | Private fields + Public methods     | Patient.java      |
-| Inheritance    | ✅     | Person → Patient (extends)          | Person.java,      |
-|                |        |                                     | Patient.java      |
+| Inheritance    | ✅     | Person (abstract) → Patient (extends)| Person.java,      |
+|                |        | Method Overriding with @Override    | Patient.java      |
 | Polymorphism   | ✅     | Method Overloading                  | HospitalAdmin.java|
-| Abstraction    | ✅     | Hidden implementation details       | HospitalAdmin.java|
+| Abstraction    | ✅     | Abstract Class + Hidden details     | Person.java,      |
+|                |        |                                     | HospitalAdmin.java|
+
+ADDITIONAL FEATURES:
+- ✅ Abstract Class: Person is abstract with abstract method displayInfo()
+- ✅ Method Overriding: Patient overrides displayInfo() and toString() with @Override annotation
+- ✅ Method Overloading: Multiple versions of isValidPassword() and searchDoctorBySpecialty()
 
 ================================================================================
 CONCLUSION
@@ -218,11 +280,18 @@ CONCLUSION
 All 4 OOP pillars are successfully implemented in the Hospital Management System:
 
 ✅ Encapsulation  - Data protection through private fields
-✅ Inheritance    - Person → Patient class hierarchy  
-✅ Polymorphism   - Method overloading for flexibility
-✅ Abstraction    - Simple interfaces hide complexity
+✅ Inheritance    - Person (abstract) → Patient class hierarchy with method overriding
+✅ Polymorphism   - Method overloading (isValidPassword, searchDoctorBySpecialty)
+✅ Abstraction    - Abstract class (Person) and hidden implementation details
+
+ADVANCED OOP FEATURES:
+✅ Abstract Class - Person class with abstract method displayInfo()
+✅ Method Overriding - Patient overrides displayInfo() and toString() with @Override annotation
+✅ Method Overloading - Multiple versions of isValidPassword() and searchDoctorBySpecialty()
+✅ Annotations - @Override annotation for method overriding
 
 ================================================================================
 END OF DOCUMENT
 ================================================================================
+
 
