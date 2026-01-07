@@ -3,15 +3,21 @@ package pack1;
 public class Patient extends Person {
     private String password;
     private String bloodGroup;
+    private String gender;
     private double medBill = 0;
     
     private String[] history = new String[50];
     private int historyCount = 0;
 
-    public Patient(String name, String password, String mobile, int age, String bloodGroup) {
-        super(name, mobile, age);  // calling person const
+    public Patient(String name, String email, String password, String mobile, int age, String bloodGroup, String gender) {
+        super(name, email, mobile, age);  // calling person const
         this.password = password;
         this.bloodGroup = bloodGroup;
+        this.gender = gender;
+    }
+    
+    public String getGender() {
+        return gender;
     }
 
     public String getUsername() { return name; }
@@ -20,12 +26,12 @@ public class Patient extends Person {
     // Override abstract mtd from Person class
     @Override
     public String displayInfo() {
-        return "Patient: " + name + " | Mobile: " + mobile + " | Age: " + age + " | Blood Group: " + bloodGroup;
+        return "Patient: " + name + " | Email: " + email + " | Mobile: " + mobile + " | Age: " + age + " | Gender: " + gender + " | Blood Group: " + bloodGroup;
     }
     
     @Override
     public String toString() {
-        return "Patient{name='" + name + "', mobile='" + mobile + "', age=" + age + ", bloodGroup='" + bloodGroup + "'}";
+        return "Patient{name='" + name + "', email='" + email + "', mobile='" + mobile + "', age=" + age + ", gender='" + gender + "', bloodGroup='" + bloodGroup + "'}";
     }
     
     public boolean checkPass(String p) { return this.password.equals(p); }
